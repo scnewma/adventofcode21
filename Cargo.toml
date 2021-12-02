@@ -1,0 +1,17 @@
+[package]
+name = "adventofcode21"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "sonar-sweep"
+path = "src/sonar-sweep.rs"
+
+[[bin]]
+name = "dive"
+path = "src/dive.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.47"
