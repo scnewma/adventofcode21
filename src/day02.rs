@@ -1,10 +1,12 @@
-fn main() -> anyhow::Result<()> {
-    let input = std::fs::read_to_string("inputs/02-dive.txt")?;
-    let commands = parse_input(&input)?;
+use crate::SolveInfo;
 
-    println!("1: {}", part01(&commands)?);
-    println!("2: {}", part02(&commands)?);
-    Ok(())
+pub(crate) fn run(input: &str) -> anyhow::Result<SolveInfo> {
+    let commands = parse_input(&input)?;
+    Ok(SolveInfo {
+        challenge: "Dive!",
+        part01: part01(&commands)?,
+        part02: part02(&commands)?,
+    })
 }
 
 enum Command {
