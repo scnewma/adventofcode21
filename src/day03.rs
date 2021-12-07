@@ -1,7 +1,7 @@
 use crate::SolveInfo;
 
 pub(crate) fn run(input: &str) -> anyhow::Result<SolveInfo> {
-    let (report, bit_width) = parse_input(&input);
+    let (report, bit_width) = parse_input(input);
 
     let part01 = part01(&report, bit_width)?;
     let part02 = part02(&report, bit_width);
@@ -22,7 +22,7 @@ fn parse_input(input: &str) -> (Vec<u16>, usize) {
     (report, bit_width)
 }
 
-fn part01(report: &Vec<u16>, width: usize) -> anyhow::Result<i64> {
+fn part01(report: &[u16], width: usize) -> anyhow::Result<i64> {
     let mut gamma: u16 = 0;
     let mut epsilon: u16 = 0;
 
@@ -49,12 +49,12 @@ fn part01(report: &Vec<u16>, width: usize) -> anyhow::Result<i64> {
     Ok(gamma as i64 * epsilon as i64)
 }
 
-fn part02(report: &Vec<u16>, width: usize) -> i64 {
+fn part02(report: &[u16], width: usize) -> i64 {
     oxygen_generator_rating(report, width) as i64 * co2_scrubber_rating(report, width) as i64
 }
 
-fn find_rating(report: &Vec<u16>, width: usize, cond: Cond) -> u16 {
-    let mut report = report.clone();
+fn find_rating(report: &[u16], width: usize, cond: Cond) -> u16 {
+    let mut report = report.to_owned();
     for i in (0..width).rev() {
         let mut ones = 0;
         let mut zeros = 0;
@@ -70,7 +70,7 @@ fn find_rating(report: &Vec<u16>, width: usize, cond: Cond) -> u16 {
 
         match cond {
             Cond::MostCommon => {
-                if ones > zeros || ones == zeros {
+                if ones >= zeros {
                     report = report.into_iter().filter(|num| num >> i & 1 == 1).collect();
                 } else {
                     report = report.into_iter().filter(|num| num >> i & 1 == 0).collect();
@@ -97,10 +97,10 @@ enum Cond {
     LeastCommon,
 }
 
-fn oxygen_generator_rating(report: &Vec<u16>, width: usize) -> u16 {
+fn oxygen_generator_rating(report: &[u16], width: usize) -> u16 {
     find_rating(report, width, Cond::MostCommon)
 }
 
-fn co2_scrubber_rating(report: &Vec<u16>, width: usize) -> u16 {
+fn co2_scrubber_rating(report: &[u16], width: usize) -> u16 {
     find_rating(report, width, Cond::LeastCommon)
 }

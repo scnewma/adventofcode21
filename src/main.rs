@@ -7,6 +7,7 @@ mod day02;
 mod day03;
 mod day04;
 mod day05;
+mod day06;
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "adventofcode", about = "Advent of Code solutions: 2021")]
@@ -27,7 +28,14 @@ struct SolveInfo {
 fn main() -> anyhow::Result<()> {
     let opt = Opt::from_args();
 
-    let days = [day01::run, day02::run, day03::run, day04::run, day05::run];
+    let days = [
+        day01::run,
+        day02::run,
+        day03::run,
+        day04::run,
+        day05::run,
+        day06::run,
+    ];
 
     if let Some(day) = opt.day {
         if day > days.len() {
@@ -44,7 +52,7 @@ fn main() -> anyhow::Result<()> {
             let input = day_input(day, opt.test)?;
             let solve = f(&input)?;
             print_solve(day, solve);
-            println!("");
+            println!();
         }
     }
 

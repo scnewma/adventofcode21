@@ -6,8 +6,8 @@ use crate::SolveInfo;
 pub(crate) fn run(input: &str) -> anyhow::Result<SolveInfo> {
     Ok(SolveInfo {
         challenge: "Hydrothermal Venture",
-        part01: part01(&input),
-        part02: part02(&input),
+        part01: part01(input),
+        part02: part02(input),
     })
 }
 
@@ -105,7 +105,7 @@ impl fmt::Display for Grid {
                     write!(f, "{}", cell)?;
                 }
             }
-            writeln!(f, "")?;
+            writeln!(f)?;
         }
         Ok(())
     }

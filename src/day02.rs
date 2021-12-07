@@ -1,7 +1,7 @@
 use crate::SolveInfo;
 
 pub(crate) fn run(input: &str) -> anyhow::Result<SolveInfo> {
-    let commands = parse_input(&input)?;
+    let commands = parse_input(input)?;
     Ok(SolveInfo {
         challenge: "Dive!",
         part01: part01(&commands)?,

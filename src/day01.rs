@@ -1,7 +1,7 @@
 use crate::SolveInfo;
 
 pub(crate) fn run(input: &str) -> anyhow::Result<SolveInfo> {
-    let input = parse_input(&input)?;
+    let input = parse_input(input)?;
 
     Ok(SolveInfo {
         challenge: "Sonar Sweep",
@@ -27,7 +27,7 @@ fn part01(input: &[i64]) -> anyhow::Result<i64> {
     let mut prev = &input[0];
     let mut inc = 0;
     for n in input.iter().skip(1) {
-        if n > &prev {
+        if n > prev {
             inc += 1;
         }
         prev = n;

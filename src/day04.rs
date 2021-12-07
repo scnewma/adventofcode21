@@ -5,8 +5,8 @@ use std::{num::ParseIntError, str::FromStr};
 pub(crate) fn run(input: &str) -> anyhow::Result<SolveInfo> {
     Ok(SolveInfo {
         challenge: "Giant Squid",
-        part01: part01(&input),
-        part02: part02(&input),
+        part01: part01(input),
+        part02: part02(input),
     })
 }
 
@@ -52,7 +52,7 @@ impl FromStr for Game {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let chunks: Vec<_> = s.split("\n\n").collect();
-        let calls = chunks[0].split(",").map(|s| s.parse().unwrap()).collect();
+        let calls = chunks[0].split(',').map(|s| s.parse().unwrap()).collect();
         let boards = chunks[1..].iter().map(|s| s.parse().unwrap()).collect();
 
         Ok(Self { calls, boards })
