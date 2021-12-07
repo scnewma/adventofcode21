@@ -27,14 +27,8 @@ fn simulate(inital_pop: &[i64], days: i64) -> i64 {
 
     // simulate days
     (0..days).for_each(|_| {
-        let age_zero = pop[0];
-
-        // decrement age for each fish
-        (0..8).for_each(|age| pop[age] = pop[age + 1]);
-        // each fish that was age 0 produces a new fish
-        pop[8] = age_zero;
-        // all fish that were age 0 are now "full" age
-        pop[6] += age_zero;
+        pop.rotate_left(1);
+        pop[6] += pop[8];
     });
 
     pop.iter().sum()
