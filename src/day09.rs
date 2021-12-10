@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::collections::HashSet;
 use std::collections::VecDeque;
 
@@ -14,7 +13,7 @@ pub(crate) fn run(input: &str) -> anyhow::Result<SolveInfo> {
     })
 }
 
-fn part01(input: &Vec<Vec<u32>>) -> i64 {
+fn part01(input: &[Vec<u32>]) -> i64 {
     let low_points = find_low_points(input);
     // calc risk level
     low_points
@@ -44,15 +43,15 @@ impl Point {
     }
 }
 
-fn part02(grid: &Vec<Vec<u32>>) -> i64 {
+fn part02(grid: &[Vec<u32>]) -> i64 {
     let low_points = find_low_points(grid);
 
     let mut basin_sizes: Vec<i64> = low_points.iter().map(|p| basin_size(grid, *p)).collect();
-    basin_sizes.sort();
+    basin_sizes.sort_unstable();
     basin_sizes.iter().rev().take(3).product()
 }
 
-fn basin_size(grid: &Vec<Vec<u32>>, p: Point) -> i64 {
+fn basin_size(grid: &[Vec<u32>], p: Point) -> i64 {
     let mut size = 0;
 
     let max_x = grid.len() - 1;
@@ -88,7 +87,7 @@ fn basin_size(grid: &Vec<Vec<u32>>, p: Point) -> i64 {
     size
 }
 
-fn find_low_points(input: &Vec<Vec<u32>>) -> Vec<Point> {
+fn find_low_points(input: &[Vec<u32>]) -> Vec<Point> {
     let mut low_points = Vec::new();
     let max_y = input.len() - 1;
     for y in 0..input.len() {
