@@ -193,6 +193,5 @@ mod tests {
             "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf";
         let m: Display = s.parse().unwrap();
         assert_eq!(5353, m.decode());
-        unimplemented!();
     }
 }

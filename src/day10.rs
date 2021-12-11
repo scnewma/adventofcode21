@@ -4,7 +4,7 @@ pub(crate) fn run(input: &str) -> anyhow::Result<SolveInfo> {
     let input = parse_input(input);
 
     Ok(SolveInfo {
-        challenge: "Seven Segment Search",
+        challenge: "Syntax Scoring",
         part01: part01(&input),
         part02: part02(&input),
     })
