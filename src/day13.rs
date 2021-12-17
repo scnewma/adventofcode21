@@ -1,4 +1,4 @@
-use std::{collections::HashMap, usize};
+use std::{collections::HashSet, usize};
 
 use crate::SolveInfo;
 
@@ -11,45 +11,44 @@ pub(crate) fn run(input: &str) -> anyhow::Result<SolveInfo> {
     })
 }
 
-fn part01(points: &Vec<(usize, usize)>, folds: &Vec<(&str, usize)>) -> i64 {
+fn part01(points: &Vec<(usize, usize)>, folds: &Vec<Fold>) -> i64 {
     execute_folds(points, &folds[0..1]).len() as i64
 }
 
-fn part02(points: &Vec<(usize, usize)>, folds: &Vec<(&str, usize)>) -> i64 {
+fn part02(points: &Vec<(usize, usize)>, folds: &Vec<Fold>) -> i64 {
     let grid = execute_folds(points, folds);
-    let (max_x, max_y) = grid.iter().fold((0, 0), |(max_x, max_y), ((x, y), _)| {
-        (max_x.max(*x), max_y.max(*y))
-    });
-    print_grid(&grid, max_x, max_y);
+    print_grid(&grid);
     0
 }
 
-fn execute_folds(
-    points: &[(usize, usize)],
-    folds: &[(&str, usize)],
-) -> HashMap<(usize, usize), i32> {
+enum Fold {
+    X(usize),
+    Y(usize),
+}
+
+fn execute_folds(points: &[(usize, usize)], folds: &[Fold]) -> HashSet<(usize, usize)> {
     let mut max_x = 0;
     let mut max_y = 0;
-    let mut grid = HashMap::new();
+    let mut grid = HashSet::new();
     for (x, y) in points {
-        grid.insert((*x, *y), 1);
+        grid.insert((*x, *y));
         max_x = max_x.max(*x);
         max_y = max_y.max(*y);
     }
 
-    for (axis, idx) in folds {
-        grid = match *axis {
-            "x" => {
-                let mut new_grid = HashMap::new();
+    for fold in folds {
+        grid = match fold {
+            Fold::X(idx) => {
+                let mut new_grid = HashSet::new();
 
                 for y in 0..=max_y {
                     for x in 0..*idx {
                         let left = grid.get(&(x, y));
-                        let right = grid.get(&(idx - x + idx, y));
+                        let right = grid.get(&(2 * idx - x, y));
 
                         match (left, right) {
                             (Some(_), None) | (None, Some(_)) | (Some(_), Some(_)) => {
-                                new_grid.insert((x, y), 1);
+                                new_grid.insert((x, y));
                             }
                             (None, None) => continue,
                         }
@@ -58,17 +57,17 @@ fn execute_folds(
 
                 new_grid
             }
-            "y" => {
-                let mut new_grid = HashMap::new();
+            Fold::Y(idx) => {
+                let mut new_grid = HashSet::new();
 
                 for y in 0..*idx {
                     for x in 0..=max_x {
                         let top = grid.get(&(x, y));
-                        let bot = grid.get(&(x, idx - y + idx));
+                        let bot = grid.get(&(x, 2 * idx - y));
 
                         match (top, bot) {
                             (Some(_), None) | (None, Some(_)) | (Some(_), Some(_)) => {
-                                new_grid.insert((x, y), 1);
+                                new_grid.insert((x, y));
                             }
                             (None, None) => continue,
                         }
@@ -77,14 +76,17 @@ fn execute_folds(
 
                 new_grid
             }
-            _ => unreachable!(),
         };
     }
 
     grid
 }
 
-fn print_grid(grid: &HashMap<(usize, usize), i32>, max_x: usize, max_y: usize) {
+fn print_grid(grid: &HashSet<(usize, usize)>) {
+    let (max_x, max_y) = grid.iter().fold((0, 0), |(max_x, max_y), (x, y)| {
+        (max_x.max(*x), max_y.max(*y))
+    });
+
     for y in 0..=max_y {
         for x in 0..=max_x {
             let point = grid.get(&(x, y)).map_or(" ", |_| "#");
@@ -95,7 +97,7 @@ fn print_grid(grid: &HashMap<(usize, usize), i32>, max_x: usize, max_y: usize) {
     println!();
 }
 
-fn parse_input(input: &str) -> (Vec<(usize, usize)>, Vec<(&str, usize)>) {
+fn parse_input(input: &str) -> (Vec<(usize, usize)>, Vec<Fold>) {
     let (points, folds) = input.split_once("\n\n").unwrap();
     let points: Vec<(usize, usize)> = points
         .lines()
@@ -107,7 +109,14 @@ fn parse_input(input: &str) -> (Vec<(usize, usize)>, Vec<(&str, usize)>) {
         .lines()
         .flat_map(|s| s.strip_prefix("fold along "))
         .flat_map(|s| s.split_once("="))
-        .map(|(axis, idx)| (axis, idx.parse().unwrap()))
+        .map(|(axis, idx)| {
+            let idx = idx.parse().unwrap();
+            match axis {
+                "x" => Fold::X(idx),
+                "y" => Fold::Y(idx),
+                _ => unreachable!(),
+            }
+        })
         .collect();
 
     (points, folds)
