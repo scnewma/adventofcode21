@@ -123,7 +123,7 @@ mod tests {
     #[test]
     fn test_day11() {
         let input = include_str!("../inputs/11.txt");
-        let solve = run(&input).unwrap();
+        let solve = run(input).unwrap();
 
         assert_eq!(1721, solve.part01);
         assert_eq!(298, solve.part02);

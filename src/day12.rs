@@ -25,12 +25,12 @@ fn part02(edges: &HashMap<&str, Vec<&str>>) -> i64 {
 
 fn enumerate<'a>(
     edges: &HashMap<&'a str, Vec<&'a str>>,
-    path: &Vec<&'a str>,
+    path: &[&'a str],
     current_cave: &'a str,
     visits: &HashMap<&'a str, i64>,
     max_visits: i64,
 ) -> i64 {
-    let mut path = path.clone();
+    let mut path = path.to_owned();
     path.push(current_cave);
     println!("{:?} - {:?}", path, visits);
 
@@ -47,7 +47,7 @@ fn enumerate<'a>(
         if is_small_cave(neighbor) {
             // check small cave to determine if we have visited it more times than allowed
             // if so then we end this path here and pop this neighbor off the stack
-            let num_visits = visits.entry(&neighbor).or_default();
+            let num_visits = visits.entry(neighbor).or_default();
             if *num_visits >= max_visits {
                 continue;
             }

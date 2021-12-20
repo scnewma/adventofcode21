@@ -11,11 +11,11 @@ pub(crate) fn run(input: &str) -> anyhow::Result<SolveInfo> {
     })
 }
 
-fn part01(points: &Vec<(usize, usize)>, folds: &Vec<Fold>) -> i64 {
+fn part01(points: &[(usize, usize)], folds: &[Fold]) -> i64 {
     execute_folds(points, &folds[0..1]).len() as i64
 }
 
-fn part02(points: &Vec<(usize, usize)>, folds: &Vec<Fold>) -> i64 {
+fn part02(points: &[(usize, usize)], folds: &[Fold]) -> i64 {
     let grid = execute_folds(points, folds);
     print_grid(&grid);
     0
