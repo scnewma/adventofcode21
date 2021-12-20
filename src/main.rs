@@ -15,6 +15,7 @@ mod day10;
 mod day11;
 mod day12;
 mod day13;
+mod day14;
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "adventofcode", about = "Advent of Code solutions: 2021")]
@@ -49,6 +50,7 @@ fn main() -> anyhow::Result<()> {
         day11::run,
         day12::run,
         day13::run,
+        day14::run,
     ];
 
     if let Some(day) = opt.day {
