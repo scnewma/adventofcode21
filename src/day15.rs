@@ -15,11 +15,16 @@ pub(crate) fn run(input: &str) -> anyhow::Result<SolveInfo> {
 }
 
 fn part01(grid: &HashMap<(i32, i32), u32>) -> i64 {
-    lowest_risk_path(grid)
+    let (total_risk, path) = lowest_risk_path(grid);
+    // not necessary, but cool to see the path
+    print_grid(grid, path);
+
+    total_risk
 }
 
 fn part02(grid: &HashMap<(i32, i32), u32>) -> i64 {
-    lowest_risk_path(&extend(grid))
+    let (total_risk, _) = lowest_risk_path(&extend(grid));
+    total_risk
 }
 
 // converts single grid into extended grid that is 5 times the size
@@ -60,11 +65,13 @@ fn extend(grid: &HashMap<(i32, i32), u32>) -> HashMap<(i32, i32), u32> {
 }
 
 // returns the total risk of the path with the lowest risk from top-left to bot-right
-fn lowest_risk_path(grid: &HashMap<(i32, i32), u32>) -> i64 {
+fn lowest_risk_path(grid: &HashMap<(i32, i32), u32>) -> (i64, Vec<(i32, i32)>) {
     // keep track of the smallest calculated risks for each point where calculated risk is
     // determined by summing the risks for all nodes on the path to this point.
     let mut risks = HashMap::new();
     risks.insert((0, 0), 0);
+
+    let mut path = HashMap::new();
 
     // priority queue sorted by least calculated risk
     let mut queue = BinaryHeap::new();
@@ -81,7 +88,7 @@ fn lowest_risk_path(grid: &HashMap<(i32, i32), u32>) -> i64 {
     while let Some((Reverse(risk), current)) = queue.pop() {
         // if we are at our destination then it's risk is the smallest path risk
         if current == destination {
-            return risk as i64;
+            return (risk as i64, convert_path(path, (0, 0), destination));
         }
 
         // check all 4 neighbors
@@ -109,11 +116,50 @@ fn lowest_risk_path(grid: &HashMap<(i32, i32), u32>) -> i64 {
             let nrisk = risk + grid[&neighbor];
             if prev_risk > nrisk {
                 risks.insert(neighbor, nrisk);
+                path.insert(neighbor, current);
                 queue.push((Reverse(nrisk), neighbor));
             }
         }
     }
     unreachable!()
+}
+
+fn print_grid(grid: &HashMap<(i32, i32), u32>, shortest_path: Vec<(i32, i32)>) {
+    let (mut max_x, mut max_y) = (0, 0);
+    for (pos, _) in grid.iter() {
+        max_x = max_x.max(pos.0);
+        max_y = max_y.max(pos.1);
+    }
+
+    for y in 0..=max_y {
+        for x in 0..=max_x {
+            if shortest_path.contains(&(x, y)) {
+                // color red
+                print!("\x1B[0;31m{}\x1B[0m", grid[&(x, y)]);
+            } else {
+                print!("{}", grid[&(x, y)]);
+            }
+        }
+        println!();
+    }
+}
+
+fn convert_path(
+    chain: HashMap<(i32, i32), (i32, i32)>,
+    origin: (i32, i32),
+    destination: (i32, i32),
+) -> Vec<(i32, i32)> {
+    let mut path = Vec::new();
+
+    let mut current = destination;
+    while current != origin {
+        path.push(current);
+        current = *chain.get(&current).unwrap();
+    }
+    path.push(origin);
+
+    path.reverse();
+    path
 }
 
 fn parse_input(input: &str) -> HashMap<(i32, i32), u32> {
