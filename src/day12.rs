@@ -77,7 +77,7 @@ fn is_small_cave(cave: &str) -> bool {
 fn parse_input(input: &str) -> HashMap<&str, Vec<&str>> {
     let mut edges: HashMap<&str, Vec<&str>> = HashMap::new();
     for line in input.lines() {
-        let (left, right) = line.split_once("-").unwrap();
+        let (left, right) = line.split_once('-').unwrap();
         edges.entry(left).or_default().push(right);
         edges.entry(right).or_default().push(left);
     }

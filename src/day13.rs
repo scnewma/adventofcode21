@@ -101,14 +101,14 @@ fn parse_input(input: &str) -> (Vec<(usize, usize)>, Vec<Fold>) {
     let (points, folds) = input.split_once("\n\n").unwrap();
     let points: Vec<(usize, usize)> = points
         .lines()
-        .flat_map(|s| s.split_once(","))
+        .flat_map(|s| s.split_once(','))
         .map(|(x, y)| (x.parse().unwrap(), y.parse().unwrap()))
         .collect();
 
     let folds = folds
         .lines()
         .flat_map(|s| s.strip_prefix("fold along "))
-        .flat_map(|s| s.split_once("="))
+        .flat_map(|s| s.split_once('='))
         .map(|(axis, idx)| {
             let idx = idx.parse().unwrap();
             match axis {

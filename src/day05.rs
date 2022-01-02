@@ -147,7 +147,7 @@ impl FromStr for Point {
     type Err = &'static str;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let (x, y) = s.split_once(",").expect("point not in x,y format");
+        let (x, y) = s.split_once(',').expect("point not in x,y format");
         Ok(Point(
             x.parse().expect("x not i64"),
             y.parse().expect("y not i64"),

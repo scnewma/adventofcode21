@@ -77,7 +77,7 @@ fn process_line(line: &str) -> LineType {
         }
     }
 
-    let ending = stack.iter().rev().map(|opening| pair(opening)).collect();
+    let ending = stack.iter().rev().map(pair).collect();
     LineType::Incomplete(ending)
 }
 

@@ -48,7 +48,7 @@ fn part02(commands: &[Command]) -> anyhow::Result<i64> {
 fn parse_input(input: &str) -> anyhow::Result<Vec<Command>> {
     let mut commands = Vec::new();
     for line in input.lines() {
-        let (cmd, units) = line.split_once(" ").unwrap();
+        let (cmd, units) = line.split_once(' ').unwrap();
         let units: i64 = units.parse()?;
 
         let command = match cmd {
